@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 
+const Thing = require('./models/thing');
+
 // creation d'application express
 const app = express();
 
@@ -26,45 +28,28 @@ app.use(bodyParser.json());
 
 //middleware
 
-app.post('/api/stuff', (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: 'Objet créé !'
+app.post('/api/sauces', (req, res, next) => {
+  delete req.body._id;
+  const thing = new Thing({
+    ...req.body
   });
+  thing.save()
+    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+    .catch(error => res.status(400).json({ error }));
+});
+
+app.get('/api/sauces/:id', (req, res, next) => {
+  Thing.findOne({ _id: req.params.id })
+    .then(thing => res.status(200).json(thing))
+    .catch(error => res.status(404).json({ error }));
 });
 
 //utilisation methode app.use avec fonction qui resoit la requette et la reponse et une fonction next pour renvoyer a la prochaine fonction l'execusion du server
-app.use('/api/stuff', (req, res, next) => {
-    const stuff = [
-      {
-        id: 'oeihfzeoi',
-        title: 'Ma premiere sauce',
-        name: 'sauce tomate' ,
-        manufacturer: 'amora',
-        description: 'Description de la sauce',
-        mainPepper: 'tomates',
-        imageUrl: 'http://www.lasupersuperette.com/wp-content/uploads/2012/07/IMG_4004REC.jpg',
-        heat: 7 ,
-        likes: 36 ,
-        dislikes: 10 ,
-        userId: 'qsomihvqios',
-      },
-      {
-        id: 'ofjfjv',
-        title: 'Ma deuxieme sauce',
-        name: 'sauce mayonaise' ,
-        manufacturer: 'amora',
-        description: 'Description de la sauce',
-        mainPepper: 'huile',
-        imageUrl: 'https://www.carrefour.fr/media/540x540/Photosite/PGC/EPICERIE/8711200552900_PHOTOSITE_20210610_062953_0.jpg?placeholder=1',
-        heat: 6 ,
-        likes: 20 ,
-        dislikes: 40 ,
-        userId: 'lksfksf',
-      },
-    ];
-    res.status(200).json(stuff);
-  });
+app.use('/api/sauces', (req, res, next) => {
+  Thing.find()
+    .then(things => res.status(200).json(things))
+    .catch(error => res.status(400).json({ error }));
+});
 // exportation de l'application
 module.exports = app;
 
