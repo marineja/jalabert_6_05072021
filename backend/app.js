@@ -34,7 +34,13 @@ app.post('/api/sauces', (req, res, next) => {
     ...req.body
   });
   thing.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
+    .then(() => res.status(201).json({ message: 'sauce enregistré !'}))
+    .catch(error => res.status(400).json({ error }));
+});
+
+app.put('/api/sauces/:id', (req, res, next) => {
+  Thing.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'sauce modifié !'}))
     .catch(error => res.status(400).json({ error }));
 });
 
@@ -42,6 +48,12 @@ app.get('/api/sauces/:id', (req, res, next) => {
   Thing.findOne({ _id: req.params.id })
     .then(thing => res.status(200).json(thing))
     .catch(error => res.status(404).json({ error }));
+});
+
+app.delete('/api/sauces/:id', (req, res, next) => {
+  Thing.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'sauce supprimé !'}))
+    .catch(error => res.status(400).json({ error }));
 });
 
 //utilisation methode app.use avec fonction qui resoit la requette et la reponse et une fonction next pour renvoyer a la prochaine fonction l'execusion du server
