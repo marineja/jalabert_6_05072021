@@ -10,6 +10,9 @@ const saucesRoutes = require('./routes/sauces');
 
 const userRoutes = require('./routes/user');
 
+//pour avoir acces au chemin du systeme de ficher (pour les images)
+const path = require('path');
+
 // creation d'application express
 const app = express();
 
@@ -27,6 +30,8 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
