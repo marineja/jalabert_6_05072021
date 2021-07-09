@@ -4,11 +4,15 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 
+const cors = require('cors');
+
 const mongoose = require('mongoose');
 
 const saucesRoutes = require('./routes/sauces');
 
 const userRoutes = require('./routes/user');
+
+const auth = require('./routes/user');
 
 //pour avoir acces au chemin du systeme de ficher (pour les images)
 const path = require('path');
@@ -21,6 +25,8 @@ mongoose.connect('mongodb+srv://Openclassrooms:Openclassrooms@cluster0.ygeh8.mon
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
+
+app.use(cors());
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

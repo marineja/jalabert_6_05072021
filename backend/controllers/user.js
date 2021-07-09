@@ -1,4 +1,6 @@
+// cryptae des donnée
 const bcrypt = require('bcrypt');
+// genere des jetons de connextion
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
