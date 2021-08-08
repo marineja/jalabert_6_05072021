@@ -45,7 +45,7 @@ exports.deleteThing = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-
+// recuperer une sauce selectionnée
   exports.getOneThing = (req, res, next) => {
     Thing.findOne({ _id: req.params.id})
     .then(things => res.status(200).json(things))
@@ -65,7 +65,7 @@ exports.deleteThing = (req, res, next) => {
  exports.voteThings = (req, res, next) => {
     const vote = req.body.like;
     switch(vote){
-          // si l'utilisateur aime :  ajout de son id au tableau et incrémentation des likes
+          // si l'utilisateur like :  ajout de son id au tableau et incrémentation des likes
           case 1 :
               Thing.updateOne({_id : req.params.id}, {$inc : {likes : +1 },
               $push : { usersLiked : req.body.userId}
@@ -74,7 +74,7 @@ exports.deleteThing = (req, res, next) => {
                 .catch(error => res.status(500).json({error}))       
           break;
 
-          // si 'utilisateur n'aime pas :ajout de son id au tableau et  incrémentation des likes
+          // si 'utilisateur don't like :ajout de son id au tableau et  incrémentation des dislikes
           case -1 :
             Thing.updateOne({_id : req.params.id}, {
               $push : { usersDisliked : req.body.userId}, $inc : {dislikes : +1 }
@@ -83,7 +83,7 @@ exports.deleteThing = (req, res, next) => {
                 .catch(error => res.status(500).json({ error }))
           break;
 
-          //l'utilisateur suprime sont like ou je n'aime pas  : il est retiré  du tableau et  désincrémentation  des jaime et jaime pas d'apres son tableau
+          //l'utilisateur suprime son like ou dislike  : il est retiré  du tableau et  désincrémentation  des likes et dislikes pas d'apres son tableau
           case 0 :  
             Thing.findOne({_id : req.params.id})
                 .then(thing => {
